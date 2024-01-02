@@ -6,79 +6,85 @@
 int prompt_line(void);
 int prompt_line(void)
 {
-char *path = getenv("PATH");
-char *path_copy = strdup(path);
-int arg_count = 0;
-char *token, *fl_path;
-int pin;
-ssize_t size_length = 0;
-char *args[MAX_ARGS];
-pid_t c_pid;
-char input[MAX_INPUT_LENGTH];
+    char *path = getenv("PATH");
+    char *path_copy = strdup(path);
+    int arg_count = 0;
+    char *token, *fl_path;
+    int pin;
+    ssize_t size_length = 0;
+    char *args[MAX_ARGS];
+    pid_t c_pid;
+    char input[MAX_INPUT_LENGTH];
 
-while (1)
-{
-write(STDOUT_FILENO, "$ ", 2);
-size_length = read(STDIN_FILENO, input, MAX_INPUT_LENGTH);
+    while (1)
+    {
+        write(STDOUT_FILENO, "Tendo$ ", 7);
+        size_length = read(STDIN_FILENO, input, MAX_INPUT_LENGTH);
 
-if (_strcmp(input, "exit") == 0)
-{
-exit(0);
-}
+        if (size_length == 0)
+        {
+            write(STDOUT_FILENO, "\n", 1);
+            continue;
+        }
 
-if (size_length == 0)
-{
-write(STDOUT_FILENO, "\n", 1);
-break;
-}
-else if (size_length < 0)
-{
-write(STDERR_FILENO, "Error reading input.\n", 21);
+        input[size_length - 1] = '\0'; 
 
-continue;
-}
-arg_count = parse_arguments(input, args);
+       
+        if (_strcmp(input, "exit") == 0)
+       {
+            break;
+        }
 
-if (arg_count > 0)
-{
-c_pid = fork();
+        struct stat s;
+        for (token = strtok(strdup(path_copy), ":");
+	token != NULL;
+	token = strtok(NULL, ":"))
+        {
+            fl_path = malloc(strlen(token) + strlen(input) + 2);
+            sprintf(fl_path, "%s/%s", token, input);
 
-if (c_pid < 0)
-{
-write(STDERR_FILENO, "Fork error.\n", 29);
+            if (stat(fl_path, &s) == 0 && s.st_mode & S_IXUSR)
+            {
+                break;
+            }
 
-continue;
-}
-else if (c_pid == 0)
-{
-token = strtok(path_copy, " ");
+            free(fl_path);
+        }
 
-while (token != NULL)
-{
-fl_path = malloc(_strlen(token) + 2);
-sprintf(fl_path, "%s", token);
-args[MAX_ARGS] = NULL;
+        if (token == NULL)
+        {
+            write(STDERR_FILENO, "Error: Command not found or not executable.\n", 43);
+            continue;
+        }
 
-if (execve(fl_path, args, NULL) == -1)
-{
-perror("execve");
-free(fl_path);
-exit(EXIT_FAILURE);
-}
-free(fl_path);
-token = strtok(NULL, " ");
-}
-write(STDERR_FILENO, "Error occurred for command.\n", 29);
-exit(EXIT_FAILURE);
-}
-else
-{
-waitpid(c_pid, &pin, 0);
-}
-}
-}
-free(path_copy);
-return (0);
+        arg_count = parse_arguments(input, args);
+
+        c_pid = fork();
+
+        if (c_pid < 0)
+        {
+            write(STDERR_FILENO, "Fork error.\n", 12);
+            break;
+        }
+        else if (c_pid == 0)
+        {
+            args[arg_count] = NULL;
+            if (execve(fl_path, args, NULL) == -1)
+            {
+                perror("execve");
+                free(fl_path);
+                exit(EXIT_FAILURE);
+            }
+        }
+        else
+        {
+            waitpid(c_pid, &pin, 0);
+            free(fl_path); 
+        }
+    }
+
+    free(path_copy); 
+    return 0;
 }
 /**
 * parse_arguments - is extract an argument and command input.
