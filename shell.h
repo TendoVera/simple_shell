@@ -15,4 +15,5 @@ int exit_built(void);
 int _strlen(char *s);
 int _strcmp(const char *str1, const char *str2);
 int parse_arguments(char *input, char **args);
+int env_builtin(void);
 #endif
