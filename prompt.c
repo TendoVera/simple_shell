@@ -3,9 +3,8 @@
 * prompt_line - Entry.
 * Return: 0.
 */
-int prompt_line(void);
+int prompt_line(void)
 {
-
 	char *path = getenv("PATH");
 	char *path_copy = strdup(path);
 	int arg_count = 0;
@@ -33,13 +32,6 @@ int prompt_line(void);
 	{
 		break;
 	}
-       
-    /**    if (_strcmp(input, "exit") == 0)
-       {
-            break;
-        }
-	*/
-
 
 	for (token = strtok(strdup(path_copy), ":");
 
