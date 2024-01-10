@@ -10,11 +10,11 @@ int prompt_line(void)
 	char *path_copy = strdup(path);
 	int arg_count = 0;
 	char *token, *fl_path;
- 	int pin;
- 	ssize_t size_length = 0;
- 	char *args[MAX_ARGS];
- 	pid_t c_pid;
- 	char input[MAX_INPUT_LENGTH];
+	int pin;
+	ssize_t size_length = 0;
+	char *args[MAX_ARGS];
+	pid_t c_pid;
+	char input[MAX_INPUT_LENGTH];
 
 	while (1)
 	{
@@ -27,15 +27,14 @@ int prompt_line(void)
 		continue;
 	}
 
-	input[size_length - 1] = '\0'; 
-
-       
+	input[size_length - 1] = '\0';
 	if (_strcmp(input, "exit") == 0)
 	{
 		break;
 	}
 
 	struct stat s;
+
 	for (token = strtok(strdup(path_copy), ":");
 	token != NULL;
 	token = strtok(NULL, ":"))
@@ -79,12 +78,12 @@ int prompt_line(void)
 	else
 	{
 		waitpid(c_pid, &pin, 0);
-		free(fl_path); 
+		free(fl_path);
 	}
 }
 
-	free(path_copy); 
-	return 0;
+	free(path_copy);
+	return (0);
 }
 /**
 * parse_arguments - is extract an argument and command input.
@@ -96,13 +95,14 @@ int parse_arguments(char *input, char **args)
 {
 	int arg_count = 0;
 	char *token;
+
 	token = strtok(input, " \n");
 
-while (token != NULL)
-{
-	args[arg_count++] = token;
-	token = strtok(NULL, " \n");
-}
+	while (token != NULL)
+	{
+		args[arg_count++] = token;
+		token = strtok(NULL, " \n");
+	}
 	args[arg_count] = NULL;
 	return (arg_count);
 }
