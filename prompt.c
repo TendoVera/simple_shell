@@ -28,10 +28,7 @@ int prompt_line(void)
 	}
 
 	input[size_length - 1] = '\0';
-	if (_strcmp(input, "exit") == 0)
-	{
-		break;
-	}
+	
 
 	for (token = strtok(strdup(path_copy), ":");
 
