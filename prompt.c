@@ -6,15 +6,15 @@
 int prompt_line(void);
 int prompt_line(void)
 {
-    char *path = getenv("PATH");
-    char *path_copy = strdup(path);
-    int arg_count = 0;
-    char *token, *fl_path;
-    int pin;
-    ssize_t size_length = 0;
-    char *args[MAX_ARGS];
-    pid_t c_pid;
-    char input[MAX_INPUT_LENGTH];
+	char *path = getenv("PATH");
+	char *path_copy = strdup(path);
+	int arg_count = 0;
+	char *token, *fl_path;
+ 	int pin;
+ 	ssize_t size_length = 0;
+ 	char *args[MAX_ARGS];
+ 	pid_t c_pid;
+ 	char input[MAX_INPUT_LENGTH];
 
     while (1)
     {
