@@ -9,6 +9,7 @@ int prompt_line(void)
     char *path = getenv("PATH");
     char *path_copy = strdup(path);
     int arg_count = 0;
+    struct stat s;
     char *token, *fl_path;
     int pin;
     ssize_t size_length = 0;
@@ -30,12 +31,12 @@ int prompt_line(void)
         input[size_length - 1] = '\0'; 
 
        
-        if (_strcmp(input, "exit") == 0)
+    /**    if (_strcmp(input, "exit") == 0)
        {
             break;
         }
+	*/
 
-        struct stat s;
         for (token = strtok(strdup(path_copy), ":");
 	token != NULL;
 	token = strtok(NULL, ":"))
