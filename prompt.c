@@ -15,6 +15,7 @@ int prompt_line(void)
 	char *args[MAX_ARGS];
 	pid_t c_pid;
 	char input[MAX_INPUT_LENGTH];
+	struct stat s;
 
 	while (1)
 	{
@@ -33,7 +34,6 @@ int prompt_line(void)
 		break;
 	}
 
-	struct stat s;
 
 	for (token = strtok(strdup(path_copy), ":");
 	token != NULL;
